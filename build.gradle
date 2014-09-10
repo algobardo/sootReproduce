@@ -1,0 +1,89 @@
+apply plugin: 'scala'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+repositories{
+    mavenCentral()
+    mavenLocal()
+}
+sourceSets {
+    main {
+        scala {
+            srcDirs = ['src']
+        }
+    }
+    test {
+        scala {
+            srcDirs = ['test']
+        }
+    }
+}
+dependencies{
+    compile fileTree(dir: 'libs', includes: [ '*.jar' ]),
+    "org.scala-lang:scala-library:2.11.0",
+    "org.rogach:scallop_2.11.0-M8:0.9.5",
+    files("soot/lib/soot-trunk.jar")
+    testCompile "junit:junit:4.11"
+}
+
+
+targetCompatibility = 1.6
+
+
+def files = file('res/').listFiles().sort()
+files.sort().each { 
+ targetName -> 
+    def bname = targetName.name
+    if(bname.contains('.apk') || bname.contains('.java')){
+        task "instrument_$bname"(type: JavaExec, dependsOn: classes) { 
+            main = 'entry'
+            args = ["$targetName"]
+            classpath sourceSets.main.runtimeClasspath
+            classpath configurations.runtime
+        } 
+    }
+} 
+task "runprogram"(type: JavaExec, dependsOn: classes) { 
+            main = 'entry'
+            args = ["res"]
+            classpath sourceSets.main.runtimeClasspath
+            classpath configurations.runtime
+} 
+
+apply plugin:'application'
+mainClassName = "entry"
+/*
+apply plugin: 'executable-jar'
+
+// This is the class that starts your application
+String mainClass = 'entry'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'net.nisgits.gradle:gradle-executable-jar-plugin:1.7.0'
+    }
+}
+
+
+*/
+
+
+
+/*
+apply plugin: 'maven'
+
+group = 'org.cs.au.dk.TestInstrumentation'
+// looks odd, but pulls the version from the property defined in gradle.properties
+version = "1.0"
+String artifactId = 'testInst'
+
+
+install {
+    repositories.mavenInstaller {
+  
+    }
+}
+*/
