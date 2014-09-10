@@ -115,23 +115,20 @@ object entry {
      */
 
 
-//
-    val allClasses = Scene.v().getClasses.iterator()
-    while(allClasses.hasNext){
+// Disables instrumentation of specific class
+    // val allClasses = Scene.v().getClasses.iterator()
+    // while(allClasses.hasNext){
 
-      val cl = allClasses.next
-      if(cl.resolvingLevel() == SootClass.BODIES &&
-        (cl.implementsInterface("java.lang.annotation.Annotation")
-          || forcedLibrary.contains(cl.getName))
-          || !cl.getName.contains("android.app") /* Doesn't boot otherwise*/
-      ) {
-        println("Excluded " + cl)
-        cl.setLibraryClass()
-      }
+    //   val cl = allClasses.next
+    //   if(cl.resolvingLevel() == SootClass.BODIES &&
+    //     (cl.implementsInterface("java.lang.annotation.Annotation")
+    //       || forcedLibrary.contains(cl.getName))
+    //   ) {
+    //     println("Excluded " + cl)
+    //     cl.setLibraryClass()
+    //   }
 
-    }
-
-//    PackManager.v().getPack("jtp").add(new Transform("jtp.traceAssign", new TraceAssigments()))
+    // }
 
     PackManager.v().runPacks()
 
