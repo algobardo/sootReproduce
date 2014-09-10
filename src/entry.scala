@@ -146,7 +146,7 @@ object entry {
   def main(args: Array[String]): scala.Unit = {
     
     if(args.size == 0) {
-      sootFrameworkInstrumentClasses(new File("./res/classes"), new File("./out/"), "")
+      sootFrameworkInstrumentClasses(new File("./res/classes"), new File("./out/"), "./classpath/core.jar:./classpath/ext.jar:./classpath/bouncycastle.jar:./classpath/conscrypt.jar:./classpath/corejunit.jar")
     }
     
   }
