@@ -138,13 +138,42 @@ object entry {
 
   }
 
+  def instrumentDexJar() = {  
+    Options.v().set_verbose(false)
 
+    Options.v().set_src_prec(Options.src_prec_apk)
+
+    Options.v().set_output_format(Options.output_format_dex)
+
+    // android jars folder
+    soot.options.Options.v().set_android_jars("android-platforms")
+    Options.v().set_allow_phantom_refs(true)
+
+    val procDir = new util.ArrayList[String]()
+    procDir.add("./res/framework.apk");
+
+    Options.v().set_output_dir("./res")
+
+    Options.v().set_process_dir(procDir)
+
+
+    Scene.v().loadNecessaryClasses()
+    Scene.v().loadBasicClasses()
+
+    PackManager.v().runPacks()
+
+    if(!Options.v().oaat())
+      PackManager.v().writeOutput()
+
+  }
 
   def main(args: Array[String]): scala.Unit = {
     
-    if(args.size == 0) {
-      sootFrameworkInstrumentClasses(new File("./res/classes"), new File("./out/"), "./classpath/core.jar:./classpath/ext.jar:./classpath/bouncycastle.jar:./classpath/conscrypt.jar:./classpath/corejunit.jar")
-    }
+    // if(args.size == 0) {
+    //   sootFrameworkInstrumentClasses(new File("./res/classes"), new File("./out/"), "./classpath/core.jar:./classpath/ext.jar:./classpath/bouncycastle.jar:./classpath/conscrypt.jar:./classpath/corejunit.jar")
+    // }
     
+    instrumentDexJar();
+
   }
 }
